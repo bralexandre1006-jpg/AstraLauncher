@@ -23,6 +23,23 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Ranger les fichiers
+        shell: bash
+        run: |
+          echo "=== Contenu du dépôt ==="; ls -la
+          mkdir -p native scripts www
+          place() { local name="$1" dest="$2"
+            if [ -f "$dest/$name" ]; then return 0; fi
+            local src=$(find . -path ./node_modules -prune -o -type f -name "$name" -print | grep -v "^./$dest/" | head -1)
+            if [ -n "$src" ]; then cp "$src" "$dest/$name"; echo "OK $name -> $dest/ (depuis $src)"; else echo "MANQUANT : $name"; fi; }
+          for f in BootReceiver CarPlugin MainActivity MediaListener TaskbarService; do place "$f.java" native; done
+          place vendor.js scripts
+          place patch-android.js scripts
+          place index.html www
+          place car.glb www
+          echo "=== Résultat ==="; ls -la native scripts www
+          test -f scripts/vendor.js && test -f scripts/patch-android.js && test -f www/index.html && test -f www/car.glb
+
       - name: Dépendances
         run: npm install
 

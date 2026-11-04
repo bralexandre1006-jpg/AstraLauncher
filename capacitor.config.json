@@ -1,0 +1,8 @@
+{
+  "appId": "com.rst.astralauncher",
+  "appName": "Astra Launcher",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#02030a"
+  }
+}

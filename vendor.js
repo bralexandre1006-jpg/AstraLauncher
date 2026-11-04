@@ -1,0 +1,13 @@
+const fs = require('fs'), path = require('path');
+const nm = p => path.join(__dirname, '..', 'node_modules', p);
+const out = p => path.join(__dirname, '..', 'www', 'vendor', p);
+const cp = (src, dst) => { fs.mkdirSync(path.dirname(out(dst)), { recursive: true }); fs.copyFileSync(nm(src), out(dst)); };
+cp('three/build/three.module.min.js', 'three/build/three.module.min.js');
+cp('three/examples/jsm/loaders/GLTFLoader.js', 'three/examples/jsm/loaders/GLTFLoader.js');
+cp('three/examples/jsm/utils/BufferGeometryUtils.js', 'three/examples/jsm/utils/BufferGeometryUtils.js');
+cp('three/examples/jsm/libs/meshopt_decoder.module.js', 'three/examples/jsm/libs/meshopt_decoder.module.js');
+const fdir = nm('@fontsource-variable/inter/files');
+const font = fs.readdirSync(fdir).find(f => /latin-wght-normal\.woff2$/.test(f) && !/ext/.test(f));
+fs.copyFileSync(path.join(fdir, font), out('inter.woff2'));
+fs.copyFileSync(nm('@fontsource-variable/antonio/files/antonio-latin-wght-normal.woff2'), out('antonio.woff2'));
+console.log('vendor OK');

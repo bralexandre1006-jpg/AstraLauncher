@@ -1,0 +1,18 @@
+{
+  "name": "astra-launcher",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "vendor": "node scripts/vendor.js"
+  },
+  "dependencies": {
+    "@capacitor/android": "6.2.3",
+    "@capacitor/core": "6.2.3",
+    "@fontsource-variable/inter": "5.3.0",
+    "three": "0.160.0",
+    "@fontsource-variable/antonio": "5.3.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "6.2.3"
+  }
+}

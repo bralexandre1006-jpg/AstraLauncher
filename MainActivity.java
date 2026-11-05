@@ -13,6 +13,7 @@ public class MainActivity extends BridgeActivity {
         super.onCreate(savedInstanceState);
         try { getBridge().getWebView().getSettings().setMediaPlaybackRequiresUserGesture(false); } catch (Exception ignored) {}
         immersive();
+        TaskbarService.keep(this);
     }
 
     @Override

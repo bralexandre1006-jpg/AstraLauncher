@@ -73,7 +73,7 @@ public class CarPlugin extends Plugin {
 
     private final MediaController.Callback cb = new MediaController.Callback() {
         @Override public void onMetadataChanged(MediaMetadata m) { emit(); }
-        @Override public void onPlaybackStateChanged(PlaybackState s) { emit(); }
+        @Override public void onPlaybackStateChanged(PlaybackState s) { if (s != null && s.getState() != PlaybackState.STATE_PLAYING) handler.postDelayed(CarPlugin.this::pick, 1500); emit(); }
         @Override public void onSessionDestroyed() { pick(); }
         @Override public void onQueueChanged(List<MediaSession.QueueItem> q) { emit(); }
     };
@@ -319,9 +319,13 @@ public class CarPlugin extends Plugin {
 
     private void pick(List<MediaController> list) {
         MediaController best = null;
-        if (list != null) for (MediaController c : list) {
-            if (YTM.equals(c.getPackageName())) { best = c; break; }
-            if (best == null) best = c;
+        if (list != null) {
+            for (MediaController c : list) {
+                PlaybackState ps = c.getPlaybackState();
+                if (ps != null && ps.getState() == PlaybackState.STATE_PLAYING) { best = c; break; }
+            }
+            if (best == null) for (MediaController c : list) if (YTM.equals(c.getPackageName())) { best = c; break; }
+            if (best == null && !list.isEmpty()) best = list.get(0);
         }
         if (ctrl != null) ctrl.unregisterCallback(cb);
         ctrl = best;
@@ -413,10 +417,20 @@ public class CarPlugin extends Plugin {
     }
 
     @PluginMethod public void openPermission(PluginCall call) {
-        Intent i = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getContext().startActivity(i);
-        call.resolve();
+        java.util.ArrayList<Intent> tries = new java.util.ArrayList<>();
+        if (Build.VERSION.SDK_INT >= 30) {
+            Intent d = new Intent("android.settings.NOTIFICATION_LISTENER_DETAIL_SETTINGS");
+            d.putExtra("android.provider.extra.NOTIFICATION_LISTENER_COMPONENT_NAME", cn().flattenToString());
+            tries.add(d);
+        }
+        tries.add(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
+        tries.add(new Intent().setClassName("com.android.settings", "com.android.settings.Settings$NotificationAccessSettingsActivity"));
+        tries.add(new Intent().setClassName("com.android.settings", "com.android.settings.Settings$ManageApplicationsActivity"));
+        for (Intent i : tries) {
+            try { i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); getContext().startActivity(i); call.resolve(); return; }
+            catch (Exception ignored) {}
+        }
+        call.reject("Réglage introuvable");
     }
 
     @PluginMethod public void seek(PluginCall call) {
@@ -449,6 +463,16 @@ public class CarPlugin extends Plugin {
         AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         am.setStreamVolume(AudioManager.STREAM_MUSIC, call.getInt("vol", 0), 0);
         call.resolve();
+    }
+
+    @PluginMethod public void adjustVolume(PluginCall call) {
+        AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+        int d = call.getInt("dir", 1);
+        am.adjustStreamVolume(AudioManager.STREAM_MUSIC, d > 0 ? AudioManager.ADJUST_RAISE : AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
+        JSObject r = new JSObject();
+        r.put("vol", am.getStreamVolume(AudioManager.STREAM_MUSIC));
+        r.put("max", am.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        call.resolve(r);
     }
 
     /* ---------- Tension batterie (autoradio) ---------- */

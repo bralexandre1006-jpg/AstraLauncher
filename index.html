@@ -15,7 +15,7 @@ input{user-select:text;-webkit-user-select:text}
 #bg{position:fixed;inset:0;width:100%;height:100%;z-index:-1}
 
 .gl{position:relative;border-radius:var(--rad,26px);background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));
- -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
+ background-color:rgba(18,20,30,.82);
  border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 16px 36px -18px rgba(0,0,0,.8);transition:transform .2s cubic-bezier(.3,1.5,.5,1),background .2s}
 .press:active{transform:scale(.95);background:rgba(255,255,255,.12)}
 
@@ -60,7 +60,7 @@ body.boot #app>*{opacity:0;transform:translateY(16px)}
 
 /* voiture */
 #hero{position:relative;flex:1;min-height:0;margin:0 -22px}
-#car{position:absolute;left:0;right:0;top:-10px;bottom:-56px;width:100%;height:calc(100% + 66px);touch-action:none}
+#car{position:absolute;left:0;right:0;top:-10px;bottom:-56px;width:100%;height:calc(100% + 66px);pointer-events:none}
 #side{position:absolute;right:20px;top:18px;z-index:2;display:flex;flex-direction:column;gap:26px}
 .ib{position:relative;font-size:26px;color:rgba(235,240,255,.62);padding:4px;transition:transform .15s,color .15s}
 .ib:active{transform:scale(.85);color:#fff}
@@ -96,8 +96,17 @@ body.boot #app>*{opacity:0;transform:translateY(16px)}
 
 /* menus */
 #menus{display:flex;flex-direction:column;gap:12px}
-#media{--rad:28px;--mc:120,130,170;display:flex;align-items:center;gap:16px;padding:14px;overflow:hidden}
-#mGlow{position:absolute;inset:0;z-index:-1;background:radial-gradient(70% 140% at 0% 50%,rgba(var(--mc),.45),transparent 70%);transition:background 1s;border-radius:inherit}
+#mcard{--rad:28px;--mc:120,130,170;padding:14px 14px 10px;overflow:hidden}
+#media{display:flex;align-items:center;gap:16px}
+#mbtns{display:grid;grid-template-columns:1fr 1fr 1.3fr 1fr 1fr;gap:10px;margin-top:12px}
+.mb{height:74px;border-radius:22px;display:grid;place-items:center;font-size:34px;color:var(--txt);background:rgba(255,255,255,.07);border:1px solid var(--line);transition:transform .12s,background .12s}
+.mb:active{transform:scale(.93);background:rgba(255,255,255,.16)}
+.mb svg{fill:currentColor;stroke:none}
+#volDn svg,#volUp svg{fill:none;stroke:currentColor}
+.mb.big{background:var(--txt);color:#05060a;font-size:40px;border:none}
+#volBar{height:4px;border-radius:4px;background:rgba(255,255,255,.08);margin:10px 4px 0;overflow:hidden}
+#volBar i{display:block;height:100%;width:50%;background:var(--acc);transition:width .2s}
+#mGlow{position:absolute;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(70% 140% at 0% 50%,rgba(var(--mc),.45),transparent 70%);transition:background 1s;border-radius:inherit}
 #artW{position:relative;flex-shrink:0}
 .eq{position:absolute;right:6px;bottom:6px;display:none;gap:2px;align-items:flex-end;height:14px;padding:3px 4px;border-radius:6px;background:rgba(0,0,0,.55)}
 .eq i{width:3px;background:#fff;border-radius:2px;animation:eq .9s ease-in-out infinite}
@@ -116,9 +125,16 @@ body.boot #app>*{opacity:0;transform:translateY(16px)}
 .cb{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:22px;color:var(--txt);transition:transform .15s}
 .cb:active{transform:scale(.88)}
 .cb svg{fill:currentColor;stroke:none}
-#pp{width:62px;height:62px;background:var(--txt);color:#05060a;font-size:24px}
 
-#nav{display:flex;gap:12px}
+
+#nav{display:flex;gap:12px;align-items:stretch}
+#search[hidden],.fav[hidden]{display:none!important}
+#favDock{flex:1;display:flex;gap:10px;min-width:0}
+.fd{flex:1;max-width:120px;height:88px;border-radius:24px;display:flex;align-items:center;justify-content:center;background:rgba(18,20,30,.82);border:1px solid var(--line);transition:transform .12s}
+.fd:active{transform:scale(.93)}
+.fd img{width:60px;height:60px;border-radius:16px}
+.fd.add{color:var(--dim);font-size:30px;border-style:dashed}
+#nav .sq{height:88px;width:80px}
 #search{--rad:24px;flex:1;display:flex;align-items:center;gap:14px;padding:0 20px;height:72px;font-size:17px;color:var(--mut)}
 #search .i{font-size:24px;color:var(--acc)}
 .sq{--rad:24px;width:72px;height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:11px;color:var(--mut)}
@@ -391,6 +407,10 @@ body.sport #inst small{color:rgba(255,120,120,.7)}
 .amh img{width:48px;height:48px;border-radius:14px}.amh b{font-size:18px}
 .ami{padding:15px 12px;border-radius:14px;font-size:16px}
 .ami:active{background:rgba(255,255,255,.08)}.ami.red{color:#ff5a5f}
+.seg2{display:flex;gap:4px;padding:4px;border-radius:16px;background:rgba(255,255,255,.06);margin-bottom:14px}
+.seg2 div{flex:1;text-align:center;padding:14px;border-radius:12px;font-size:16px;font-weight:600;color:var(--mut)}
+.seg2 .on{background:rgba(255,255,255,.16);color:#fff}
+.ap.isfav img{box-shadow:0 0 0 3px #ffd166}
 #appSearch{display:flex;align-items:center;gap:12px;padding:0 16px;height:52px;margin-bottom:18px;border-radius:16px;background:rgba(255,255,255,.06);color:var(--mut)}
 #appSearch input{flex:1;background:none;border:none;outline:none;color:#fff;font:inherit;font-size:16px}
 #appGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:22px 10px}
@@ -447,27 +467,30 @@ body.sport #inst small{color:rgba(255,120,120,.7)}
   </section>
 
   <section id="menus">
-    <div id="media" class="gl">
-      <div id="mGlow"></div>
+    <div id="mcard" class="gl"><div id="mGlow"></div><div id="media">
       <div id="artW"><div id="art"></div><div class="eq"><i></i><i></i><i></i></div></div>
       <div class="mi">
         <div id="mTitle">YouTube Music</div>
         <div id="mArtist">Touche pour lancer la musique</div>
         <div class="track"><i id="mProg"></i></div>
         <div class="mtimes"><span id="mPos">0:00</span><span id="mDur">0:00</span></div>
-        <div id="perm">Touche pour autoriser l'accès à la musique</div>
-      </div>
-      <div class="ctrl">
-        <div class="cb" id="prev"></div>
-        <div class="cb" id="pp"></div>
-        <div class="cb" id="next"></div>
+        <div id="perm">⚠ Touche ici pour autoriser l'accès à la musique</div>
       </div>
     </div>
+    <div id="mbtns">
+      <div class="mb" id="volDn"></div>
+      <div class="mb" id="prev"></div>
+      <div class="mb big" id="pp"></div>
+      <div class="mb" id="next"></div>
+      <div class="mb" id="volUp"></div>
+    </div>
+    <div id="volBar"><i id="volFill"></i></div>
+    </div>
     <div id="nav">
-      <div id="search" class="gl press"><span id="sIc"></span>Où va-t-on ?</div>
-      <div class="sq gl press fav" data-k="home"><span class="ic"></span></div>
+      <div id="favDock"></div>
       <div class="sq gl press" id="chBtn"><span class="ic"></span></div>
       <div class="sq gl press" id="appsBtn"><span class="ic"></span></div>
+      <div id="search" hidden><span id="sIc"></span></div><div class="fav" data-k="home" hidden><span class="ic"></span></div>
     </div>
   </section>
 </div>
@@ -585,9 +608,9 @@ body.sport #inst small{color:rgba(255,120,120,.7)}
   <h3>Applications<span class="x close"></span></h3>
   <div class="obar" id="autoRow" hidden style="margin-bottom:14px"><div class="ostat off"><i></i><span>Lancement auto au contact désactivé</span></div><div class="obtn" id="autoBtn">Activer</div></div>
   <div id="appSearch"><span id="asIc"></span><input id="appQ" placeholder="Rechercher"></div>
-  <div id="pinWrap"><div class="osec" style="margin-top:0"><small>ÉPINGLÉES</small></div><div class="arow" id="pinRow"></div></div>
-  <div id="recWrap"><div class="osec"><small>RÉCENTES</small></div><div class="arow" id="recRow"></div></div>
-  <div class="osec"><small>TOUTES LES APPLICATIONS</small><small id="appCount"></small></div>
+  <div class="seg2" id="appTabs"><div data-t="fav" class="on">Favoris</div><div data-t="oth">Autres</div></div>
+  <div id="pinWrap" hidden><div class="arow" id="pinRow"></div></div><div id="recWrap" hidden><div id="recRow"></div></div>
+  <div class="osec"><small id="appHint">Appui long sur une app pour l'ajouter ou la retirer des favoris</small><small id="appCount"></small></div>
   <div id="appGrid"></div>
 </div></div>
 
@@ -644,7 +667,7 @@ const I={
  fog:S('<path d="M4 9h16M6 13h12M4 17h16"/>')
 };
 const $=id=>document.getElementById(id);
-$('sIc').innerHTML=I.search;$('asIc').innerHTML=I.search;$('prev').innerHTML=I.prev;$('next').innerHTML=I.next;$('pp').innerHTML=I.play;
+$('sIc').innerHTML=I.search;$('volDn').innerHTML=S('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 12h5"/>');$('volUp').innerHTML=S('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 12h5M18.5 9.5v5"/>');$('asIc').innerHTML=I.search;$('prev').innerHTML=I.prev;$('next').innerHTML=I.next;$('pp').innerHTML=I.play;
 $('art').innerHTML=I.note;$('mcIc').innerHTML=I.wrench;$('colorBtn').innerHTML=I.palette;
 const NSEG=40;$('segs').innerHTML='<i></i>'.repeat(NSEG);
 const segs=[...$('segs').children];
@@ -666,7 +689,7 @@ function onPress(el,tap,hold){
   ['pointerup','pointerleave','pointercancel'].forEach(e=>el.addEventListener(e,()=>clearTimeout(t)));
   el.addEventListener('click',e=>{if(!held)tap(e)});
 }
-let cfg=Object.assign({sfx:true,halo:true,sport:true,weather:true,taskbar:true},load('cfg',{}));
+let cfg=Object.assign({sfx:true,halo:false,sport:true,weather:false,taskbar:true},load('cfg',{}));if(!load('cfgV2',false)){cfg.halo=false;cfg.weather=false;save('cfg',cfg);save('cfgV2',true)}
 /* sons */
 let AC=null;const ac=()=>{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC};
 function tone(f1,f2,dur,type='sine',vol=.06,delay=0){const a=ac(),t=a.currentTime+delay,o=a.createOscillator(),g=a.createGain();o.type=type;
@@ -812,31 +835,40 @@ $('navClr').onclick=()=>{recents=[];save('recents',recents);renderNav()};
 $('openWaze').onclick=()=>{$('navSheet').classList.remove('show');openApp('com.waze')};
 
 /* applications */
-let apps=null,pinned=load('pinned',[]),recentPk=[],menuApp=null;
+let apps=null,pinned=load('pinned',null)??['com.waze','com.google.android.apps.youtube.music'],recentPk=[],menuApp=null;
 const FALLBACK=[{name:'Waze',pkg:'com.waze'},{name:'YouTube Music',pkg:'com.google.android.apps.youtube.music'},{name:'YouTube',pkg:'com.google.android.youtube'},{name:'Play Store',pkg:'com.android.vending'},{name:'Paramètres',pkg:'com.android.settings'}];
 async function loadApps(force){const C=Car();if(!apps||force){apps=C?(await C.listApps()).apps:FALLBACK}if(C?.getRecents){try{recentPk=(await C.getRecents()).recents}catch{}}else recentPk=load('recentsW',[])}
 function launchApp(pkg){$('appsSheet').classList.remove('show');openApp(pkg);if(!Car()){recentPk=[pkg,...recentPk.filter(x=>x!==pkg)].slice(0,10);save('recentsW',recentPk)}}
 function apEl(a){const el=document.createElement('div');el.className='ap';
   el.innerHTML=(a.icon?`<img src="${a.icon}">`:'<div class="ph"></div>')+`<span>${esc(a.name)}</span>`;
   onPress(el,()=>launchApp(a.pkg),()=>openApMenu(a));return el}
+let appTab='fav';
+document.querySelectorAll('#appTabs div').forEach(t=>t.onclick=()=>{appTab=t.dataset.t;document.querySelectorAll('#appTabs div').forEach(x=>x.classList.toggle('on',x===t));renderApps()});
 async function renderApps(force){
   await loadApps(force);const by=Object.fromEntries(apps.map(a=>[a.pkg,a]));
   const q=$('appQ').value.trim().toLowerCase();
-  const pa=pinned.map(p=>by[p]).filter(Boolean),ra=recentPk.map(p=>by[p]).filter(a=>a&&!pinned.includes(a.pkg)).slice(0,6);
-  $('pinWrap').hidden=!!q||!pa.length;$('recWrap').hidden=!!q||!ra.length;
-  $('pinRow').replaceChildren(...pa.map(apEl));$('recRow').replaceChildren(...ra.map(apEl));
-  const list=apps.filter(a=>!q||a.name.toLowerCase().includes(q));$('appCount').textContent=list.length;
-  $('appGrid').replaceChildren(...list.map(apEl));
+  let list=q?apps.filter(a=>a.name.toLowerCase().includes(q)):appTab==='fav'?pinned.map(p=>by[p]).filter(Boolean):apps.filter(a=>!pinned.includes(a.pkg));
+  $('appCount').textContent=list.length;
+  $('appHint').textContent=appTab==='fav'&&!q&&!list.length?'Aucun favori : va dans « Autres » et fais un appui long sur une app':'Appui long sur une app pour l\'ajouter ou la retirer des favoris';
+  $('appGrid').replaceChildren(...list.map(a=>{const el=apEl(a);if(pinned.includes(a.pkg))el.classList.add('isfav');return el}));
+  renderDock();
 }
+function renderDock(){
+  const by=Object.fromEntries((apps||[]).map(a=>[a.pkg,a]));const fav=pinned.map(p=>by[p]).filter(Boolean).slice(0,5);
+  const els=fav.map(a=>{const el=document.createElement('div');el.className='fd';el.innerHTML=a.icon?`<img src="${a.icon}">`:`<b>${esc(a.name.slice(0,2))}</b>`;
+    onPress(el,()=>openApp(a.pkg),()=>openApMenu(a));return el});
+  if(fav.length<5){const ad=document.createElement('div');ad.className='fd add';ad.innerHTML=I.plus;ad.onclick=()=>{appTab='oth';document.querySelectorAll('#appTabs div').forEach(x=>x.classList.toggle('on',x.dataset.t==='oth'));$('appQ').value='';sheet('appsSheet');renderApps(true)};els.push(ad)}
+  $('favDock').replaceChildren(...els)}
 function syncPinned(){save('pinned',pinned);Car()?.setPinned?.({pkgs:pinned}).catch(()=>{})}
 function openApMenu(a){menuApp=a;$('amIc').src=a.icon||'';$('amIc').style.display=a.icon?'':'none';$('amName').textContent=a.name;
-  $('amPin').textContent=pinned.includes(a.pkg)?'Retirer des épinglées':'Épingler (accueil des apps + barre des tâches)';$('apMenu').classList.add('show')}
+  $('amPin').textContent=pinned.includes(a.pkg)?'Retirer des favoris':'Ajouter aux favoris';$('apMenu').classList.add('show')}
 const closeAm=()=>$('apMenu').classList.remove('show');
-$('amPin').onclick=()=>{const p=menuApp.pkg;pinned=pinned.includes(p)?pinned.filter(x=>x!==p):[...pinned,p].slice(0,8);syncPinned();closeAm();renderApps()};
+$('amPin').onclick=()=>{const p=menuApp.pkg;pinned=pinned.includes(p)?pinned.filter(x=>x!==p):[...pinned,p].slice(0,12);syncPinned();closeAm();renderApps()};
 $('amInfo').onclick=()=>{closeAm();Car()?.appInfo({pkg:menuApp.pkg})};
 $('amDel').onclick=()=>{closeAm();Car()?.uninstall({pkg:menuApp.pkg}).then(()=>setTimeout(()=>renderApps(true),4000)).catch(()=>toast('Application système : impossible'))};
 $('amCancel').onclick=closeAm;$('apMenu').onclick=e=>{if(e.target.id==='apMenu')closeAm()};
-$('appsBtn').onclick=()=>{$('appQ').value='';sheet('appsSheet');renderApps(true)};
+$('appsBtn').onclick=()=>{$('appQ').value='';appTab=pinned.length?'fav':'oth';document.querySelectorAll('#appTabs div').forEach(x=>x.classList.toggle('on',x.dataset.t===appTab));sheet('appsSheet');renderApps(true)};
+loadApps().then(renderDock).catch(()=>{});
 $('appQ').oninput=()=>renderApps();
 syncPinned();
 
@@ -856,7 +888,7 @@ function renderNotifs(){
   $('sbNo').hidden=!notifs.length;$('sbNoN').textContent=notifs.length;
   if(!$('ccSheet').classList.contains('show'))return;
   $('ncClear').style.visibility=notifs.length?'':'hidden';
-  if(sys.notifOff){$('ncList').innerHTML='<div class="ohint">Autorise « Astra Launcher » dans l\'accès aux notifications pour les voir ici. <u id="ncPerm">Autoriser</u></div>';$('ncPerm').onclick=()=>Car()?.openPermission();return}
+  if(sys.notifOff){$('ncList').innerHTML='<div class="ohint">Autorise « Astra Launcher » dans l\'accès aux notifications pour les voir ici. <u id="ncPerm">Autoriser</u></div>';$('ncPerm').onclick=()=>Car()?.openPermission().catch(()=>toast('Réglage introuvable'));return}
   $('ncList').innerHTML=notifs.length?notifs.sort((a,b)=>b.time-a.time).map(n=>`<div class="nc" data-k="${esc(n.key)}">${n.icon?`<img src="${n.icon}">`:''}<div class="t"><div class="h"><span>${esc(n.app)}</span><span>${timeAgo(n.time)}</span></div><b>${esc(n.title)}</b><p>${esc(n.text)}</p></div><span class="dx">${I.close}</span></div>`).join('')
     :'<div class="ohint">Aucune notification.</div>';
   $('ncList').querySelectorAll('.nc').forEach(el=>{const k=el.dataset.k;
@@ -930,13 +962,18 @@ setInterval(()=>{const p=curPos(),f=ms.dur?Math.min(1,p/ms.dur):0;
   if(!seeking){$('pProg').style.width=f*100+'%';$('pKnob').style.left=f*100+'%'}},300);
 function ctl(a){const C=Car();if(C)C.control({action:a}).catch(()=>{if(a==='toggle')openApp(YTM)});else if(a==='toggle')openApp(YTM)}
 [['prev','previous'],['pp','toggle'],['next','next'],['pPrev','previous'],['pPP','toggle'],['pNext','next']].forEach(([id,a])=>$(id).addEventListener('click',e=>{e.stopPropagation();ctl(a)}));
-onPress($('media'),()=>{const C=Car();if($('perm').style.display==='block'&&C)return C.openPermission();sheet('playerSheet');syncVol()},()=>openApp(YTM));
+$('perm').addEventListener('click',e=>{e.stopPropagation();Car()?.openPermission().catch(()=>toast('Réglage introuvable sur cet autoradio'))});
+onPress($('media'),()=>{const C=Car();if($('perm').style.display==='block'&&C)return C.openPermission().catch(()=>toast('Réglage introuvable sur cet autoradio'));sheet('playerSheet');syncVol()},()=>openApp(YTM));
 $('openYtm').onclick=()=>{$('playerSheet').classList.remove('show');openApp(YTM)};
 (function(){const sk=$('seek');let f=0;
   const at=e=>{const r=sk.getBoundingClientRect();f=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width));$('pProg').style.width=f*100+'%';$('pKnob').style.left=f*100+'%';$('pPos').textContent=mmss(f*ms.dur)};
   sk.addEventListener('pointerdown',e=>{if(!ms.dur)return;seeking=true;sk.setPointerCapture(e.pointerId);at(e)});
   sk.addEventListener('pointermove',e=>{if(seeking)at(e)});
   sk.addEventListener('pointerup',()=>{if(!seeking)return;seeking=false;const t=f*ms.dur;ms.pos=t;ms.at=Date.now();Car()?.seek({ms:Math.round(t)}).catch(()=>{})})})();
+async function volStep(d){const C=Car();if(!C)return;try{const v=C.adjustVolume?await C.adjustVolume({dir:d}):await (async()=>{const g=await C.getVolume();const n=Math.max(0,Math.min(g.max,g.vol+d));await C.setVolume({vol:n});return {vol:n,max:g.max}})();
+  $('volFill').style.width=v.vol/v.max*100+'%'}catch{}}
+$('volDn').addEventListener('click',e=>{e.stopPropagation();volStep(-1)});$('volUp').addEventListener('click',e=>{e.stopPropagation();volStep(1)});
+(async()=>{try{const v=await Car()?.getVolume();if(v)$('volFill').style.width=v.vol/v.max*100+'%'}catch{}})();
 async function syncVol(){const C=Car();if(!C)return;try{const v=await C.getVolume();$('volR').max=v.max;$('volR').value=v.vol;volFill()}catch{}}
 function volFill(){const r=$('volR');r.style.setProperty('--vp',r.value/r.max*100+'%')}
 $('volR').oninput=()=>{volFill();Car()?.setVolume({vol:+$('volR').value}).catch(()=>{})};volFill();
@@ -1244,7 +1281,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 const cv=document.getElementById('car');
 const r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true,powerPreference:'high-performance'});
-r.setPixelRatio(Math.min(devicePixelRatio,1.75));
+r.setPixelRatio(Math.min(devicePixelRatio,1.25));
 r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.05;r.outputColorSpace=THREE.SRGBColorSpace;
 r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;
 const sc=new THREE.Scene();
@@ -1444,15 +1481,16 @@ function size(){const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;r.setS
 new ResizeObserver(size).observe(cv);size();
 
 /* ---------- interaction ---------- */
-let ang=(()=>{try{return +localStorage.getItem('carAng')||.75}catch{return .75}})(),vel=0,drag=false,lx=0,intro=0,spin=0;
+const CAR_ANG=-0.95;
+let ang=CAR_ANG,vel=0,drag=false,lx=0,intro=0,spin=0;
 let dX=0,dY=0,dT=0,taps=[];
-const saveAng=()=>{try{localStorage.setItem('carAng',ang)}catch{}};
+const saveAng=()=>{};
 const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();
 let lpT=null,lpFired=false;
-cv.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;dX=e.clientX;dY=e.clientY;dT=performance.now();vel=0;spin=0;lpFired=false;cv.setPointerCapture(e.pointerId);invalidate();
+if(false)cv.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;dX=e.clientX;dY=e.clientY;dT=performance.now();vel=0;spin=0;lpFired=false;cv.setPointerCapture(e.pointerId);invalidate();
   });
-cv.addEventListener('pointermove',e=>{if(!drag)return;if(Math.hypot(e.clientX-dX,e.clientY-dY)>12)clearTimeout(lpT);const d=(e.clientX-lx)*.008;ang+=d;vel=d;lx=e.clientX});
-cv.addEventListener('pointerup',e=>{drag=false;clearTimeout(lpT);
+if(false)cv.addEventListener('pointermove',e=>{if(!drag)return;if(Math.hypot(e.clientX-dX,e.clientY-dY)>12)clearTimeout(lpT);const d=(e.clientX-lx)*.008;ang+=d;vel=d;lx=e.clientX});
+if(false)cv.addEventListener('pointerup',e=>{drag=false;clearTimeout(lpT);
   const ddx=e.clientX-dX,ddy=e.clientY-dY,dt=performance.now()-dT;
   if(lpFired){vel=0}
   else if(ddy<-50&&Math.abs(ddy)>Math.abs(ddx)*1.5&&dt<500){ang-=ddx*.008;vel=0;window.jump3D()}

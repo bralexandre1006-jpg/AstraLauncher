@@ -57,6 +57,25 @@ public class TaskbarService extends Service {
         fg();
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         build();
+        android.content.IntentFilter f = new android.content.IntentFilter();
+        f.addAction(Intent.ACTION_SCREEN_ON);
+        f.addAction(Intent.ACTION_USER_PRESENT);
+        f.addAction("com.fyt.boot.ACCON");
+        f.addAction("android.intent.action.ACC_ON");
+        f.addAction("com.ts.main.uiaccon");
+        f.addAction("autochips.intent.action.QB_POWERON");
+        try {
+            if (Build.VERSION.SDK_INT >= 33) registerReceiver(wake, f, Context.RECEIVER_EXPORTED); else registerReceiver(wake, f);
+        } catch (Exception ignored) {}
+    }
+
+    private final android.content.BroadcastReceiver wake = new android.content.BroadcastReceiver() {
+        @Override public void onReceive(Context c, Intent i) { BootReceiver.launchBurst(getApplicationContext()); }
+    };
+
+    static void keep(Context c) {
+        Intent i = new Intent(c, TaskbarService.class).setAction("keep");
+        try { if (Build.VERSION.SDK_INT >= 26) c.startForegroundService(i); else c.startService(i); } catch (Exception ignored) {}
     }
 
     private void fg() {
@@ -184,6 +203,8 @@ public class TaskbarService extends Service {
                 fillApps();
                 apply();
                 if (!shown) { wm.addView(bar, lp); shown = true; }
+            } else if ("keep".equals(a)) {
+                // service maintenu pour détecter le réveil, barre inchangée
             } else if (shown) {
                 wm.removeView(bar);
                 shown = false;
@@ -193,6 +214,7 @@ public class TaskbarService extends Service {
     }
 
     @Override public void onDestroy() {
+        try { unregisterReceiver(wake); } catch (Exception ignored) {}
         if (shown) try { wm.removeView(bar); } catch (Exception ignored) {}
         super.onDestroy();
     }
